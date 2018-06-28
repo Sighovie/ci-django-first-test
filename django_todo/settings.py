@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import dj_database_url
 
+if os.environ.get('DEVELOPMENT'):
+	development = True
+else:
+	development = False
+	
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -24,7 +29,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = ')5yh$w-i6=mvh%^^q7b4t2$y%p)5%9(3%ki&+@7g4=nwtiz!5k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = development
 
 #ALLOWED_HOSTS = ["django-todo-sighovie.c9users.io",
 #                 "ci-django-first-test.herokuapp.com"]
@@ -82,6 +87,16 @@ WSGI_APPLICATION = 'django_todo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 #old database settings
+
+if development:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }    
+else:
+    DATABASES = {'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))}    
 """
 DATABASES = { 
     'default': dj_database_url.parse('postgres://upjpdfgmhqnazt:e875ee42ded991044dc31294e47ea99f35228645b57b02b7a08aeea320956a1d@ec2-54-228-251-254.eu-west-1.compute.amazonaws.com:5432/d7d6s5q64p23o5'),
@@ -104,8 +119,9 @@ DATABASES = {
         'PORT': os.environ["PORT"],
     }
 }
-"""
 DATABASES = {'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))}
+"""
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
