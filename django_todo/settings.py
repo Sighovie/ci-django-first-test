@@ -26,9 +26,14 @@ SECRET_KEY = ')5yh$w-i6=mvh%^^q7b4t2$y%p)5%9(3%ki&+@7g4=nwtiz!5k'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["django-todo-sighovie.c9users.io",
-                 "ci-django-first-test.herokuapp.com"]
-
+#ALLOWED_HOSTS = ["django-todo-sighovie.c9users.io",
+#                 "ci-django-first-test.herokuapp.com"]
+ALLOWED_HOSTS = [os.environ.get('C9_HOSTNAME'),
+                os.environ.get('HOSTNAME')]
+                
+host = os.environ.get('SITE_HOST')
+if host:
+	ALLOWED_HOSTs.append(host)                
 
 # Application definition
 
@@ -77,11 +82,11 @@ WSGI_APPLICATION = 'django_todo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 #old database settings
-
+"""
 DATABASES = { 
     'default': dj_database_url.parse('postgres://upjpdfgmhqnazt:e875ee42ded991044dc31294e47ea99f35228645b57b02b7a08aeea320956a1d@ec2-54-228-251-254.eu-west-1.compute.amazonaws.com:5432/d7d6s5q64p23o5'),
 }
-"""
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -100,6 +105,8 @@ DATABASES = {
     }
 }
 """
+DATABASES = {'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))}
+
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
